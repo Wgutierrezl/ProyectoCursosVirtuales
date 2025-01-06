@@ -21,6 +21,8 @@ namespace CursosBack.Data
             //modelBuilder.Entity<Tipo>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<EstudianteCursos>()
             .HasKey(e => new { e.EstudianteID, e.CodigoCurso });
+           // modelBuilder.Entity<EstudianteCursos>()
+           //.ToTable(tb => tb.UseSqlOutputClause(false));
         }
 
     }
