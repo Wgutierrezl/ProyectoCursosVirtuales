@@ -117,6 +117,20 @@ namespace CursosBack.Controllers
             return NoContent();
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login([FromBody] Logeo request)
+        {
+            var usuario = await _context.Usuario.FirstOrDefaultAsync(u => u.UsuarioID == request.UserID && u.Contraseña == request.Password);
+            if (usuario == null)
+            {
+                return Unauthorized();
+            }
+
+            // Generar el JWT
+            var token = TokenService.GenerateJwtToken(usuario); // Implementa TokenService.GenerateJwtToken()
+            return Ok(new { Token = token, Rol = usuario.Rol });
+        }
+
         private bool UsuarioExists(string id)
         {
             return _context.Usuario.Any(e => e.UsuarioID == id);
