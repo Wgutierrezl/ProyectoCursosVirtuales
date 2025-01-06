@@ -45,4 +45,32 @@
 
 @code {
 
+
+    public List<Usuario>? listaU { get; set; }
+    public string? MessageUser { get; set; }
+    protected async Task GetUsers()
+    {
+        try
+        {
+            string url = "https://localhost:7244/api/Usuarios";
+            var response = await ServiciosUsuario.GetUsuario<List<Usuario>>(url);
+            if(!response.Error)
+            {
+                listaU = response.Response;
+                MessageUser = String.Empty;
+            }
+            else
+            {
+                listaU = null;
+                MessageUser = await response.GetErrorMessageAsync();
+            }
+
+        }catch(Exception e)
+        {
+            listaU = null;
+            MessageUser = "Error:" + e.Message;
+
+        }
+    }
+
 }
