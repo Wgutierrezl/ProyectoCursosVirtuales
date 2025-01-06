@@ -1,14 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Blazored.LocalStorage;
-
-
 namespace CursosFront.Servicios
 {
-    using Blazored.LocalStorage;
-    using System.Net.Http.Json;
-
-    namespace CursosFront.Servicios
-    {
         public class AuthService
         {
             private readonly HttpClient _httpClient;
@@ -52,6 +45,6 @@ namespace CursosFront.Servicios
             public string Token { get; set; }
             public string Rol { get; set; }
         }
-    }
 }
+
 
