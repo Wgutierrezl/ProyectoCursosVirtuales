@@ -10,10 +10,10 @@ namespace CursosControllador.Entidades
     public class Usuario
     {
         [Key]
-        public string UsuarioID { get; set; } = null!;
-        public string NombreUsuario { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Contraseña { get; set; } = null!;
-        public string Rol { get; set; } = null!;
+        public string? UsuarioID { get; set; } 
+        public string? NombreUsuario { get; set; } 
+        public string? Email { get; set; }
+        public string? Contraseña { get; set; } 
+        public string? Rol { get; set; } 
     }
 }

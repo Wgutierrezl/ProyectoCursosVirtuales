@@ -10,10 +10,10 @@ namespace CursosControllador.Entidades
     public class Cursos
     {
         [Key]
-        public string CursoID { get; set; } = null!;
-        public string InstructorID { get; set; } = null!;
-        public string NombreCurso { get; set; } = null!;
-        public string Descripcion { get; set; } = null!;
+        public string? CursoID { get; set; }
+        public string? InstructorID { get; set; }
+        public string? NombreCurso { get; set; } 
+        public string? Descripcion { get; set; } 
         public int Duracion { get; set; }
     }
 }

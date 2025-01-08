@@ -1,41 +1,101 @@
 ﻿
+using System.Text;
+using System.Text.Json;
+
 namespace CursosFront.Servicios
 {
     public class ServiciosCursos : IServiciosCursos
     {
-        public Task<HttpResponseWrapper<object>> DeleteCursos(string url)
-        {
-            throw new NotImplementedException();
-        }
+		private readonly HttpClient _httpClient;
+		private JsonSerializerOptions _jsonDefaultOptions => new JsonSerializerOptions
+		{
+			PropertyNameCaseInsensitive = true,
+		};
 
-        public Task<HttpResponseWrapper<TActionResponse>> DeleteCursos<TActionResponse>(string url)
-        {
-            throw new NotImplementedException();
-        }
+		public ServiciosCursos(HttpClient httpClient)
+		{
+			_httpClient = httpClient;
+		}
 
-        public Task<HttpResponseWrapper<T>> GetCursos<T>(string url)
+		private async Task<T> UnserializeAnswer<T>(HttpResponseMessage responseHttp)
+		{
+			var response = await responseHttp.Content.ReadAsStringAsync();
+			return JsonSerializer.Deserialize<T>(response, _jsonDefaultOptions)!;
+		}
+		public async Task<HttpResponseWrapper<object>> DeleteCursos(string url)
         {
-            throw new NotImplementedException();
-        }
+			var responseHttp = await _httpClient.DeleteAsync(url);
+			return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+		}
 
-        public Task<HttpResponseWrapper<object>> PostCursos<T>(string url, T model)
+        public async Task<HttpResponseWrapper<TActionResponse>> DeleteCursos<TActionResponse>(string url)
         {
-            throw new NotImplementedException();
-        }
+			var responseHttp = await _httpClient.DeleteAsync(url);
 
-        public Task<HttpResponseWrapper<TActionResponse>> PostCursos<T, TActionResponse>(string url, T model)
-        {
-            throw new NotImplementedException();
-        }
+			if (responseHttp.IsSuccessStatusCode)
+			{
+				var response = await UnserializeAnswer<TActionResponse>(responseHttp);
+				return new HttpResponseWrapper<TActionResponse>(response, false, responseHttp);
+			}
 
-        public Task<HttpResponseWrapper<object>> PutCursos<T>(string url, T model)
-        {
-            throw new NotImplementedException();
-        }
+			return new HttpResponseWrapper<TActionResponse>(default, !responseHttp.IsSuccessStatusCode, responseHttp);
+		}
 
-        public Task<HttpResponseWrapper<TActionResponse>> PutCursos<T, TActionResponse>(string url, T model)
+        public async Task<HttpResponseWrapper<T>> GetCursos<T>(string url)
         {
-            throw new NotImplementedException();
-        }
+			var responseHttp = await _httpClient.GetAsync(url);
+			if (responseHttp.IsSuccessStatusCode)
+			{
+				var response = await UnserializeAnswer<T>(responseHttp);
+				return new HttpResponseWrapper<T>(response, false, responseHttp);
+			}
+
+			return new HttpResponseWrapper<T>(default, true, responseHttp);
+		}
+
+        public async Task<HttpResponseWrapper<object>> PostCursos<T>(string url, T model)
+        {
+			var messageJSON = JsonSerializer.Serialize(model);
+			var messageContet = new StringContent(messageJSON, Encoding.UTF8, "application/json");
+			var responseHttp = await _httpClient.PostAsync(url, messageContet);
+			return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+		}
+
+        public async Task<HttpResponseWrapper<TActionResponse>> PostCursos<T, TActionResponse>(string url, T model)
+        {
+			var messageJSON = JsonSerializer.Serialize(model);
+			var messageContet = new StringContent(messageJSON, Encoding.UTF8, "application/json");
+			var responseHttp = await _httpClient.PostAsync(url, messageContet);
+			if (responseHttp.IsSuccessStatusCode)
+			{
+				var response = await UnserializeAnswer<TActionResponse>(responseHttp);
+				return new HttpResponseWrapper<TActionResponse>(response, false, responseHttp);
+			}
+
+			return new HttpResponseWrapper<TActionResponse>(default, !responseHttp.IsSuccessStatusCode, responseHttp);
+		}
+
+        public async Task<HttpResponseWrapper<object>> PutCursos<T>(string url, T model)
+        {
+			var messageJSON = JsonSerializer.Serialize(model);
+			var messageContet = new StringContent(messageJSON, Encoding.UTF8, "application/json");
+			var responseHttp = await _httpClient.PutAsync(url, messageContet);
+			return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
+		}
+
+        public async Task<HttpResponseWrapper<TActionResponse>> PutCursos<T, TActionResponse>(string url, T model)
+        {
+			var messageJSON = JsonSerializer.Serialize(model);
+			var messageContent = new StringContent(messageJSON, Encoding.UTF8, "application/json");
+			var responseHttp = await _httpClient.PutAsync(url, messageContent);
+
+			if (responseHttp.IsSuccessStatusCode)
+			{
+				var response = await UnserializeAnswer<TActionResponse>(responseHttp);
+				return new HttpResponseWrapper<TActionResponse>(response, false, responseHttp);
+			}
+
+			return new HttpResponseWrapper<TActionResponse>(default, !responseHttp.IsSuccessStatusCode, responseHttp);
+		}
     }
 }

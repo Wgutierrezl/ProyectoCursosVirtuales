@@ -1,5 +1,9 @@
 ﻿@page "/Cursos"
+@using Microsoft.AspNetCore.Components.Authorization;
 @using Microsoft.AspNetCore.Authorization;
+@inject AuthenticationStateProvider Provider
+@inject IServiciosCursos ServiciosCursos
+@inject IServiciosUsuario ServiciosUsuario
 @attribute [Authorize(Roles = "Administrador,Instructor")]
 
 <!DOCTYPE html>
@@ -9,11 +13,69 @@
         <link rel="stylesheet" href="~/css/app.css" />
     </head>
     <body>
-        <h1>Puedes acceder a esta pagina</h1>
+        <AuthorizeView>
+            <Authorized>
+            <h1>Usuario:@UserName</h1>
+            <h1>UsuarioID:@UsuarioID</h1>
+            </Authorized>
+        </AuthorizeView>
+
+        <h1>Gestionar cursos Virtuales</h1>
+        
+        <div>
+            <h1>Crear Curso virtual</h1>
+            <p>
+                Escriba el codigo del curso:
+            <input type="text" @bind="CursosPost.CursoID" required />
+            </p>
+
+        </div>
     
     </body>
     </html>
 
 @code {
 
+
+    //Metodo para poder Acceder a los atributos de la sesion
+    public string? UsuarioID { get; set; }
+    public string? UserName { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        CursosPost = new Cursos();
+        var AuthState = await Provider.GetAuthenticationStateAsync();
+        var user = AuthState.User;
+        UserName = user.Identity!.Name;
+        UsuarioID = user.FindFirst("UsuarioID")?.Value;
+    }
+
+    //Metodo Post Para poder crear los Cursos
+    public Cursos CursosPost { get; set; } = new Cursos();
+    public bool SuccessPost = false;
+    public string? MessagePost { get; set; }
+    protected async Task NewCurso()
+    {
+
+        try
+        {
+            string url = "https://localhost:7244/api/Cursos";
+            var response = await ServiciosCursos.PostCursos<Cursos>(url, CursosPost);
+            if(!response.Error)
+            {
+                SuccessPost = true;
+                MessagePost = String.Empty;
+            }
+            else
+            {
+                SuccessPost = false;
+                MessagePost = await response.GetErrorMessageAsync();
+            }
+
+        }catch (Exception e)
+        {
+            SuccessPost = false;
+            MessagePost = e.Message;
+
+        }
+    }
 }

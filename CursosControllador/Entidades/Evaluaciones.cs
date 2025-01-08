@@ -11,8 +11,8 @@ namespace CursosControllador.Entidades
     {
         [Key]
         public int EvaluacionID { get; set; }
-        public string CursoCodigo { get; set; } = null!;
-        public string Titulo {  get; set; }=null!;
+        public string? CursoCodigo { get; set; } 
+        public string? Titulo {  get; set; }
         public DateOnly FechaPublicacion { get; set; }
     }
 }

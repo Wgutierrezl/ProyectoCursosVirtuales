@@ -13,8 +13,8 @@ namespace CursosControllador.Entidades
         [Key]
         public int RespuestaID {  get; set; }
         public int IDPregunta {  get; set; }
-        public string IDEstudiante { get; set; } = null!;
-        public string RespuestaEstudiante { get; set; } = null!;
+        public string? IDEstudiante { get; set; } 
+        public string? RespuestaEstudiante { get; set; } 
         public int Calificacion { get; set; }
     }
 }

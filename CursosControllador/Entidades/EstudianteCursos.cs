@@ -9,8 +9,8 @@ namespace CursosControllador.Entidades
 {
     public class EstudianteCursos
     {
-        public string EstudianteID { get; set; } = null!;
-        public string CodigoCurso { get; set; } = null!;
+        public string? EstudianteID { get; set; } 
+        public string? CodigoCurso { get; set; } 
         public DateOnly FechaInscripcion { get; set; }
     }
 }
