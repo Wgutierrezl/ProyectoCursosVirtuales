@@ -23,12 +23,31 @@
         <h1>Gestionar cursos Virtuales</h1>
         
         <div>
-            <h1>Crear Curso virtual</h1>
-            <p>
-                Escriba el codigo del curso:
-            <input type="text" @bind="CursosPost.CursoID" required />
-            </p>
-
+            <h1>Traer todos los cursos</h1>
+            <button @onclick="TraerCursos">Traerlos</button>
+            @if(ListaC!=null)
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CursoID</th>
+                            <th>InstructorID</th>
+                            <th>CursoName</th>
+                            <th>Description</th>
+                            <th>Duracion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(Cursos item in ListaC)
+                        {
+                            <tr>
+                                <td>@item.</td>
+                            </tr>
+                        }
+                </tbody>
+                </table>
+            
+            }
         </div>
     
     </body>
@@ -56,6 +75,7 @@
     protected async Task NewCurso()
     {
 
+
         try
         {
             string url = "https://localhost:7244/api/Cursos";
@@ -77,5 +97,33 @@
             MessagePost = e.Message;
 
         }
+    }
+
+    public List<Cursos>? ListaC {get;set;}
+    public string? MessageList { get; set; }
+    protected async Task TraerCursos()
+    {
+        try
+        {
+            string url = "https://localhost:7244/api/Cursos";
+            var response = await ServiciosCursos.GetCursos<List<Cursos>>(url);
+            if(!response.Error)
+            {
+                ListaC = response.Response;
+                MessageList = String.Empty;
+
+            }
+            else
+            {
+                ListaC = null;
+                MessageList = String.Empty;
+            }
+
+        }catch (Exception e)
+        {
+            ListaC = null;
+            MessageList = e.Message;
+        }
+
     }
 }
