@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CursosControllador.Entidades
 {
-    public class Logeo
+    public class LoginDTO
     {
-        public string? UserID { get; set; }
-        public string? Password { get; set; }
+        public string? Correo { get; set; }
+        public string? Clave { get; set; }
     }
 }

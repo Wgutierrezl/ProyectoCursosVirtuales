@@ -1,8 +1,13 @@
 ﻿@page "/"
 @layout LogginLayout
 @inject IServiciosUsuario ServiciosUsuario
-@inject AuthService AuthService
+@inject HttpClient httpClient
+@using CursosFront.Extensiones;
+@using CursosControllador.Entidades;
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject AuthenticationStateProvider AutenticacionProvider
 @inject NavigationManager NavigationManager
+
 
 
 <!DOCTYPE html>
@@ -12,103 +17,50 @@
         <link rel="stylesheet" href="~/css/app.css" />
     </head>
     <body>
-    <div class="login-container">
-        <form @onsubmit="HandleLogin" class="form">
-            <p class="form-title">Sign in to your account</p>
+    <div class="row mt-5">
 
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <p class="error-message">@errorMessage</p>
-            }
+        <div class="col-lg-4 offset-lg-4 border">
 
-            <div class="input-container">
-                <input placeholder="Enter username"
-                       type="text"
-                       @bind="loginModel.Username"
-                       required />
-                <span>
-                    <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0 0z" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
-                    </svg>
-                </span>
+            <div class="mb-3 text-center">
+                <h3>LOGIN</h3>
             </div>
 
-            <div class="input-container">
-                <input placeholder="Enter password"
-                       type="password"
-                       @bind="loginModel.Password"
-                       required />
-                <span>
-                    <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
-                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
-                    </svg>
-                </span>
+            <div class="mb-3">
+                <label>Correo</label>
+                <input @bind="login.Correo" class="form-control" />
             </div>
 
-            <button class="submit" type="submit">
-                Sign in
-            </button>
+            <div class="mb-3">
+                <label>Contraseña</label>
+                <input @bind="login.Clave" class="form-control" />
+            </div>
 
-            <p class="signup-link">
-                No account?
-                <a href="/signup">Sign up</a>
-            </p>
-        </form>
+            <div class="mb-3">
+                <button @onclick="IniciarSesion" class="btn btn-primary">Login</button>
+            </div>
+
+        </div>
+
     </div>
     </body>
     </html>
 
 @code {
 
+    private LoginDTO login { get; set; } = new LoginDTO();
 
-    // public List<Usuario>? listaU { get; set; }
-    // public string? MessageUser { get; set; }
-    // protected async Task GetUsers()
-    // {
-    //     try
-    //     {
-    //         string url = "https://localhost:7244/api/Usuarios";
-    //         var response = await ServiciosUsuario.GetUsuario<List<Usuario>>(url);
-    //         if(!response.Error)
-    //         {
-    //             listaU = response.Response;
-    //             MessageUser = String.Empty;
-    //         }
-    //         else
-    //         {
-    //             listaU = null;
-    //             MessageUser = await response.GetErrorMessageAsync();
-    //         }
-
-    //     }catch(Exception e)
-    //     {
-    //         listaU = null;
-    //         MessageUser = "Error:" + e.Message;
-
-    //     }
-    // }
-
-    private LoginModel loginModel = new LoginModel();
-    private string? errorMessage;
-
-    protected async Task HandleLogin()
+    public async Task IniciarSesion()
     {
-        var success = await AuthService.Login(loginModel.Username, loginModel.Password);
-        if (success)
+        var loginrResponse = await httpClient.PostAsJsonAsync<LoginDTO>("/api/User/Login", login);
+        if(loginrResponse.IsSuccessStatusCode)
         {
-            NavigationManager.NavigateTo("/");
-        }
-        else
-        {
-            errorMessage = "Invalid username or password.";
+            var sesionUsuario = await loginrResponse.Content.ReadFromJsonAsync<SesionDTO>();
+            var AutenticacionExt = (AutenticacioExtension)AutenticacionProvider;
+            await AutenticacionExt.ActualizarEstadoAutenticacion(sesionUsuario);
+            NavigationManager.NavigateTo("/Home");
         }
     }
 
-    public class LoginModel
-    {
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
 
+   
 }

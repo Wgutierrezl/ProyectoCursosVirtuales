@@ -1,5 +1,6 @@
 ﻿@page "/Respuestas"
-@attribute [Authorize(Roles = "Estudiante,Instructor")]
+@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize(Roles = "Administrador,Instructor")]
 
 <!DOCTYPE html>
 <html>

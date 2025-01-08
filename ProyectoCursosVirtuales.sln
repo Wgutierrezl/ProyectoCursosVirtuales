@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursosBack", "CursosBack\Cu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursosControllador", "CursosControllador\CursosControllador.csproj", "{30F65C94-91CC-41A6-971E-491AA67B3129}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursosFront", "CursosFront\CursosFront.csproj", "{D6EEA0D8-2656-437F-94C9-ED67183D8505}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursosFront", "CursosFront\CursosFront.csproj", "{D6EEA0D8-2656-437F-94C9-ED67183D8505}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
