@@ -1,5 +1,18 @@
 ﻿@page "/Usuario"
+@attribute [Authorize(Roles ="Administrador,Instructor,Estudiante")]
 
+
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>User</title>
+        <link rel="stylesheet" href="~/css/app.css" />
+    </head>
+    <body>
+        <h1>Puedes acceder a esta pagina</h1>
+    
+    </body>
+    </html>
 
 @code {
 
