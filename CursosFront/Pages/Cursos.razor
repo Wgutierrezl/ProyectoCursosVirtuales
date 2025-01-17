@@ -1,5 +1,6 @@
 ﻿@page "/Cursos"
 @using Microsoft.AspNetCore.Components.Authorization;
+@using CursosControllador;
 @using Microsoft.AspNetCore.Authorization;
 @inject AuthenticationStateProvider Provider
 @inject IServiciosCursos ServiciosCursos
@@ -15,12 +16,13 @@
     <body>
         <AuthorizeView>
             <Authorized>
-            <h1>Usuario:@UserName</h1>
-            <h1>UsuarioID:@UsuarioID</h1>
+            <h1>Usuario:@UserName=@context.User.Identity!.Name</h1>
+            <h1>UsuarioID:@UsuarioID=@context.User.FindFirst("UsuarioID")?.Value</h1>
             </Authorized>
         </AuthorizeView>
 
         <h1>Gestionar cursos Virtuales</h1>
+        
         
         <div>
             <h1>Traer todos los cursos</h1>
@@ -35,15 +37,19 @@
                             <th>CursoName</th>
                             <th>Description</th>
                             <th>Duracion</th>
-                        </tr>
+                     </tr>
                     </thead>
                     <tbody>
-                        @* @foreach(Cursos item in ListaC)
+                        @foreach(Cursos item in ListaC)
                         {
                             <tr>
-                                <td>@item.<td>
+                                @* <td>@item.CursoID</td>
+                                <td>@item.InstructorID</td>
+                                <td>@item.CursoName</td>
+                                <td>@item.Description</td>
+                                <td>@item.Duracion</td> *@
                             </tr>
-                        } *@
+                        }
                 </tbody>
                 </table>
             
@@ -68,6 +74,9 @@
         UsuarioID = user.FindFirst("UsuarioID")?.Value;
     }
 
+
+    
+
     //Metodo Post Para poder crear los Cursos
     public Cursos CursosPost { get; set; } = new Cursos();
     public bool SuccessPost = false;
@@ -80,6 +89,7 @@
         {
             string url = "https://localhost:7244/api/Cursos";
             var response = await ServiciosCursos.PostCursos<Cursos>(url, CursosPost);
+            
             if(!response.Error)
             {
                 SuccessPost = true;
