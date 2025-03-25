@@ -1,5 +1,7 @@
 ﻿@page "/CursosEstudiantes"
 @using Microsoft.AspNetCore.Authorization;
+@inject IServiciosEstudiantesCursos ServiciosEstudiantesCursos
+@inject IServiciosCursos ServiciosCursos
 @attribute [Authorize(Roles = "Estudiante,Administrador")]
 
 <!DOCTYPE html>
@@ -9,11 +11,67 @@
     <link rel="stylesheet" href="~/css/app.css" />
 </head>
 <body>
-    <h1>Puedes acceder a esta pagina</h1>
+    <h1>Realizar incripciones a cursos</h1>
+
+    <button class="bt btn-outline-primary" @onclick="GetCursos">Traerlos</button>
+    @if(Listc!=null)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>CursoID</th>
+                    <th>CurnoName</th>
+                    <th>Descripcion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Cursos item in Listc)
+                {
+                    <tr>
+                        <td>@item.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="alert-danger">@MessageGet</p>
+    }
+
 
 </body>
 </html>
 
 @code {
+
+    public List<Cursos>? Listc { get; set; }
+    public string? MessageGet { get; set; }
+    protected async Task GetCursos()
+    {
+        try
+        {
+            string url = "https://localhost:7244/api/Cursos";
+            var response = await ServiciosCursos.GetCursos<List<Cursos>>(url);
+            if (!response.Error)
+            {
+                Listc = response.Response;
+                MessageGet = String.Empty;
+            }
+            else
+            {
+                Listc = null;
+                MessageGet = await response.GetErrorMessageAsync();
+            }
+
+        }catch (Exception e)
+        {
+            Listc = null;
+            MessageGet = e.Message;     
+        }
+
+    }
+
+
 
 }

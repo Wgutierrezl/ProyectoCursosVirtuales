@@ -11,39 +11,32 @@
 
 
 <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Login</title>
-        <link rel="stylesheet" href="~/css/app.css" />
-    </head>
-    <body>
-    <div class="row mt-5">
-
-        <div class="col-lg-4 offset-lg-4 border">
-
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/style.css" />
+</head>
+<body>
+    <div class="fullscreen-container">
+        <div class="login-container">
             <div class="mb-3 text-center">
                 <h3>LOGIN</h3>
             </div>
-
             <div class="mb-3">
                 <label>Correo</label>
-                <input @bind="login.Correo" class="form-control" />
+                <input @bind="login.Correo" class="form-control" type="email" placeholder="Correo" />
             </div>
-
             <div class="mb-3">
                 <label>Contraseña</label>
-                <input type="password" @bind="login.Clave" class="form-control" />
+                <input type="password" @bind="login.Clave" class="form-control" placeholder="Contraseña" />
             </div>
-
             <div class="mb-3">
                 <button @onclick="IniciarSesion" class="btn btn-primary">Login</button>
             </div>
-
         </div>
-
     </div>
-    </body>
-    </html>
+</body>
+</html>
 
 @code {
 
