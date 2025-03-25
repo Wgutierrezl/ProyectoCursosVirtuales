@@ -15,16 +15,13 @@ namespace CursosFront.Extensiones
 
         public static async Task<T?> ObtenerStorage<T>(this ISessionStorageService sessionStorageService, string key) where T : class
         {
-            var itemJson=await sessionStorageService.GetItemAsStringAsync(key);
-            if(itemJson != null)
-            {
-                var item = JsonSerializer.Deserialize<T>(itemJson);
-                return item;
-            }
-            else
-            {
-                return null;
-            }
+            var itemJson = await sessionStorageService.GetItemAsStringAsync(key);
+            return itemJson != null ? JsonSerializer.Deserialize<T>(itemJson) : null;
+        }
+
+        public static async Task RemoverStorage(this ISessionStorageService sessionStorageService, string key)
+        {
+            await sessionStorageService.RemoveItemAsync(key);
         }
     }
 }

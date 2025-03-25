@@ -1,4 +1,4 @@
-﻿@page "/Cursos"
+﻿@page "/Course"
 @using Microsoft.AspNetCore.Components.Authorization;
 @using CursosControllador;
 @using Microsoft.AspNetCore.Authorization;
@@ -22,42 +22,42 @@
         </AuthorizeView>
 
         <h1>Gestionar cursos Virtuales</h1>
-        
-        
+
+
         <div>
             <h1>Traer todos los cursos</h1>
             <button @onclick="TraerCursos">Traerlos</button>
             @if(ListaC!=null)
             {
-                <table>
-                    <thead>
+            <table>
+                <thead>
+                    <tr>
+                        <th>CursoID</th>
+                        <th>InstructorID</th>
+                        <th>CursoName</th>
+                        <th>Description</th>
+                        <th>Duracion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(Cursos item in ListaC)
+                    {
                         <tr>
-                            <th>CursoID</th>
-                            <th>InstructorID</th>
-                            <th>CursoName</th>
-                            <th>Description</th>
-                            <th>Duracion</th>
-                     </tr>
-                    </thead>
-                    <tbody>
-                        @foreach(Cursos item in ListaC)
-                        {
-                            <tr>
-                                @* <td>@item.CursoID</td>
-                                <td>@item.InstructorID</td>
-                                <td>@item.CursoName</td>
-                                <td>@item.Description</td>
-                                <td>@item.Duracion</td> *@
-                            </tr>
-                        }
+                            <td>@item.CursoID</td>
+                            <td>@item.InstructorID</td>
+                            <td>@item.NombreCurso</td>
+                            <td>@item.Descripcion</td>
+                            <td>@item.Duracion</td>
+                        </tr>
+                    }
                 </tbody>
-                </table>
-            
+            </table>
+
             }
-        </div>
-    
-    </body>
-    </html>
+    </div>
+
+</body>
+</html>
 
 @code {
 
@@ -75,7 +75,7 @@
     }
 
 
-    
+
 
     //Metodo Post Para poder crear los Cursos
     public Cursos CursosPost { get; set; } = new Cursos();
@@ -89,7 +89,7 @@
         {
             string url = "https://localhost:7244/api/Cursos";
             var response = await ServiciosCursos.PostCursos<Cursos>(url, CursosPost);
-            
+
             if(!response.Error)
             {
                 SuccessPost = true;
@@ -109,7 +109,7 @@
         }
     }
 
-    public List<Cursos>? ListaC {get;set;}
+    public List<Cursos>? ListaC { get; set; }
     public string? MessageList { get; set; }
     protected async Task TraerCursos()
     {

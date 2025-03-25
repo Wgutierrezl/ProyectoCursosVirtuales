@@ -26,7 +26,8 @@ namespace CursosFront.Extensiones
                     new Claim("UsuarioID",sesionUsuario.UserID),
                     new Claim(ClaimTypes.Name,sesionUsuario.Nombre),
                     new Claim(ClaimTypes.Email,sesionUsuario.Correo),
-                    new Claim(ClaimTypes.Role,sesionUsuario.Rol)
+                    new Claim(ClaimTypes.Role,sesionUsuario.Rol),
+                    new Claim("Token",sesionUsuario.Token)
                 }, "JwtAuth"));
                 await _sessionStorageService.GuardarStorage("sesionUsuario", sesionUsuario);
             }
@@ -49,10 +50,11 @@ namespace CursosFront.Extensiones
 
             var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim("UsuarioID",sesionUsuario.UserID),
-                    new Claim(ClaimTypes.Name,sesionUsuario.Nombre),
-                    new Claim(ClaimTypes.Email,sesionUsuario.Correo),
-                    new Claim(ClaimTypes.Role,sesionUsuario.Rol)
+                    new Claim("UsuarioID",sesionUsuario.UserID!),
+                    new Claim(ClaimTypes.Name,sesionUsuario.Nombre!),
+                    new Claim(ClaimTypes.Email,sesionUsuario.Correo!),
+                    new Claim(ClaimTypes.Role,sesionUsuario.Rol!),
+                    new Claim("Token",sesionUsuario.Token!)
                 }, "JwtAuth"));
             return await Task.FromResult(new AuthenticationState(claimsPrincipal));
 
